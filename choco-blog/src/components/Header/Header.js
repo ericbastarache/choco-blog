@@ -13,6 +13,7 @@ const Header = props => {
                     iconClassNameRight="muidocs-icon-navigation-expand-more">
                     <Tabs>
                        <Tab label={props.homeLink} containerElement={<Link to="/" />} />
+                       <Tab label={props.blogLink} containerElement={<Link to="/blog" />} />
                        <Tab label={props.registerLink} containerElement={<Link to="/register" />} />
                        <Tab label={props.loginLink} containerElement={<Link to="/login" />} />
                     </Tabs>
@@ -23,7 +24,10 @@ const Header = props => {
 };
 
 Header.propTypes = {
-    headTitle: PropTypes.string
+    headTitle: PropTypes.string,
+    homeLink: PropTypes.string,
+    registerLink: PropTypes.string,
+    loginLink: PropTypes.string
 };
 
 export default Header;

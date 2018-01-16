@@ -13,6 +13,7 @@ class App extends Component {
         <div>
           <Header headTitle="Choco Blog"
                   homeLink="Home"
+                  blogLink="Blog"
                   loginLink="Login"
                   registerLink="Register"
                   />
