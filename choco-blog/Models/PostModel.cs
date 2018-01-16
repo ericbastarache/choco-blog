@@ -15,8 +15,8 @@ namespace JwtApi.netcore.Models
         public string Name { get; set; }
         public string Slug { get; set; }
         public string Content { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public bool Updated { get; set; }
+        public DateTime UpdatedDate { get; set; } = DateTime.Now;
+        public bool Updated { get; set; } = false;
         public bool Published { get; set; }
         public string UserId { get; set; }
 
