@@ -11,7 +11,7 @@ const Header = props => {
                 <AppBar
                     title={props.headTitle}
                     iconClassNameRight="muidocs-icon-navigation-expand-more">
-                    <Tabs>
+                    <Tabs tabItemContainerStyle={{width: '400px'}}>
                        <Tab label={props.homeLink} containerElement={<Link to="/" />} />
                        <Tab label={props.blogLink} containerElement={<Link to="/blog" />} />
                        <Tab label={props.registerLink} containerElement={<Link to="/register" />} />

@@ -6,11 +6,11 @@ let Login = props => {
     return (
         <form onSubmit={props.handleSubmit}>
             <div>
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username">Username: </label>
                 <Field name="username" component="input" type="text" />
             </div>
             <div>
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">Password: </label>
                 <Field name="password" component="input" type="password" />
             </div>
             <button type="submit">Submit</button>
