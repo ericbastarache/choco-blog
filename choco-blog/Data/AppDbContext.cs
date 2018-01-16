@@ -11,6 +11,9 @@ namespace JwtApi.netcore.Data
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<PostModel> Posts { get; set; }
+        public DbSet<CommentModel> Comments { get; set; }
+
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {

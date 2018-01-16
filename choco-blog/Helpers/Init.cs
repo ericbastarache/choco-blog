@@ -30,7 +30,7 @@ namespace JwtApi.netcore.Helpers
                 new ApplicationUser
                 {
                     UserName = "Ericb",
-                    Email = "eric.bastarache@hotmail.com",
+                    Email = "eric_bastarache@hotmail.com",
                     FirstName = "Eric",
                     LastName = "B"
                 }
