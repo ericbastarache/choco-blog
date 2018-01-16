@@ -13,6 +13,7 @@ namespace JwtApi.netcore.Data
     {
         public DbSet<PostModel> Posts { get; set; }
         public DbSet<CommentModel> Comments { get; set; }
+        public DbSet<RemovalModel> PostRemovals { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

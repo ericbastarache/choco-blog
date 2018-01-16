@@ -52,7 +52,7 @@ namespace choco_blog.Controllers
             });
         }
 
-        [Authorize(Roles = "Admin, Blogger")]
+        [Authorize(Roles = "Blogger")]
         [HttpPost("create")]
         public async Task<IActionResult> CreatePost(PostModel model)
         {
@@ -69,7 +69,7 @@ namespace choco_blog.Controllers
             return new OkResult();
         }
 
-        [Authorize(Roles = "Admin, Blogger")]
+        [Authorize(Roles = "Blogger")]
         [HttpPut("edit")]
         public IActionResult EditPost(PostModel model)
         {
@@ -84,6 +84,45 @@ namespace choco_blog.Controllers
         public IActionResult RemovePost(PostModel model)
         {
             _ctx.Entry(model).State = EntityState.Deleted;
+            _ctx.SaveChanges();
+
+            return new OkResult();
+        }
+
+        [HttpGet("addComment")]
+        public async Task<IActionResult> AddComment(CommentModel model)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            model.UserId = user.Id;
+            model.Created = DateTime.Now;
+
+            _ctx.Add(model);
+            _ctx.SaveChanges();
+
+            return new OkResult();
+        }
+
+        [Authorize(Roles = "Admin, Blogger, Moderator")]
+        [HttpDelete("removeComment")]
+        public IActionResult RemoveComment(CommentModel model)
+        {
+            _ctx.Entry(model).State = EntityState.Deleted;
+            _ctx.SaveChanges();
+
+            return new OkResult();
+        }
+
+        [Authorize(Roles = "Moderator")]
+        [HttpDelete("markRemove")]
+        public IActionResult RemoveComment(int id)
+        {
+            var model = new RemovalModel
+            {
+                PostId = id
+            };
+
+            _ctx.PostRemovals.Add(model);
             _ctx.SaveChanges();
 
             return new OkResult();
