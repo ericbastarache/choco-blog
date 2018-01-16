@@ -8,9 +8,9 @@ const INITIAL_STATE = {
 const posts = (state = INITIAL_STATE, action) => {
     switch(action.type) {
         case FETCH_POSTS:
-            return { ...state, payload: action.payload }
+            return { ...state, posts: action.payload }
         case FETCH_POST:
-            return { ...state, payload: action.payload }
+            return { ...state, post: action.payload }
         default:
             return state
     }
