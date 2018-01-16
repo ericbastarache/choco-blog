@@ -50,7 +50,7 @@ namespace JwtApi.netcore.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByNameAsync(model.Username);
 
             if (user != null)
             {

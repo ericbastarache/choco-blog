@@ -94,6 +94,7 @@ namespace JwtApi.netcore
             app.UseIpRateLimiting();
 
             app.UseStaticFiles();
+            app.UseDefaultFiles();
 
             app.UseAuthentication();
 
