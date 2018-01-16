@@ -5,7 +5,7 @@ const INITIAL_STATE = {
     post: null
 }
 
-const posts = (state = INITIAL_STATE, action) {
+const posts = (state = INITIAL_STATE, action) => {
     switch(action.type) {
         case FETCH_POSTS:
             return {
