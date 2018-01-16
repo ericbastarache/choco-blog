@@ -17,7 +17,7 @@ namespace JwtApi.netcore.Helpers
         {
             var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();
-            string[] roles = { "Admin", "Blogger" };
+            string[] roles = { "Admin", "Blogger", "Moderator" };
             var users = new List<ApplicationUser>()
             {
                 new ApplicationUser
@@ -57,6 +57,7 @@ namespace JwtApi.netcore.Helpers
                     {
                         await userManager.AddToRoleAsync(x, "Admin");
                         await userManager.AddToRoleAsync(x, "Blogger");
+                        await userManager.AddToRoleAsync(x, "Moderator");
                     }
                 }
             }
