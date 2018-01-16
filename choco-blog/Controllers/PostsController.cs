@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace choco_blog.Controllers
 {
@@ -53,7 +54,7 @@ namespace choco_blog.Controllers
 
         [Authorize(Roles = "Admin, Blogger")]
         [HttpPost("create")]
-        public async Task<JsonResult> CreatePost(PostModel model)
+        public async Task<IActionResult> CreatePost(PostModel model)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -65,7 +66,27 @@ namespace choco_blog.Controllers
             _ctx.Posts.Add(model);
             _ctx.SaveChanges();
 
-            return Json(model);
+            return new OkResult();
+        }
+
+        [Authorize(Roles = "Admin, Blogger")]
+        [HttpPut("edit")]
+        public IActionResult EditPost(PostModel model)
+        {
+            _ctx.Entry(model).State = EntityState.Modified;
+            _ctx.SaveChanges();
+
+            return new OkResult();
+        }
+
+        [Authorize(Roles = "Admin, Blogger")]
+        [HttpDelete("discard")]
+        public IActionResult RemovePost(PostModel model)
+        {
+            _ctx.Entry(model).State = EntityState.Deleted;
+            _ctx.SaveChanges();
+
+            return new OkResult();
         }
     }
 }
