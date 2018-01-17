@@ -13,9 +13,8 @@ export const fetchPosts = (state) => {
 
 export const fetchPost = (id) => {
 
-    const response = fetch(`${API_URL}/posts/`, {
-        method: 'GET',
-        data: id
+    const request = fetch(`${API_URL}/posts/${id}`, {
+        method: 'GET'
     }).then(data => data);
 
     return {
