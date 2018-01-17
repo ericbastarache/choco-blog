@@ -83,6 +83,7 @@ namespace JwtApi.netcore
                 o.AddPolicy("RequireBloggerRole", policy => policy.RequireRole("Blogger"));
             });
 
+            services.AddSignalR();
             services.AddMvc();
         }
 
@@ -108,6 +109,8 @@ namespace JwtApi.netcore
             app.UseAuthentication();
 
             app.UseCors("Cors");
+
+            app.UseSignalR(x => x.MapHub<SignalHub>("rt"));
 
             app.UseMvc(routes =>
             {
