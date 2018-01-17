@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using JwtApi.netcore.Data;
 using JwtApi.netcore.Helpers;
 using JwtApi.netcore.Models;
+using JwtApi.netcore.Models.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -18,12 +19,10 @@ namespace JwtApi.netcore.Controllers
     [Route("api/[controller]")]
     public class PostsController : Controller
     {
-        private readonly AppDbContext _ctx;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public PostsController(AppDbContext ctx, UserManager<ApplicationUser> userManager)
+        public PostsController(UserManager<ApplicationUser> userManager)
         {
-            _ctx = ctx;
             _userManager = userManager;
         }
 
@@ -31,24 +30,14 @@ namespace JwtApi.netcore.Controllers
         [HttpGet("all")]
         public JsonResult All()
         {
-            return Json(_ctx.Posts.Where(x => x.Published));
+            return Json(PostDAL.GetAllPosts());
         }
 
         [AllowAnonymous]
         [HttpGet("{id}")]
         public JsonResult GetPost(string id)
         {
-            var isNumber = int.TryParse(id, out var identifier);
-            var post = isNumber ? _ctx.Posts.SingleOrDefault(x => x.Id == identifier)
-                : _ctx.Posts.SingleOrDefault(x => x.Slug == id);
-
-            var comments = _ctx.Comments.Where(x => x.PostId == post.Id);
-
-            return Json(new
-            {
-                post = post,
-                comments = comments
-            });
+            return Json(PostDAL.GetPost(id));
         }
 
         [Authorize(Roles = "Blogger")]
@@ -56,14 +45,7 @@ namespace JwtApi.netcore.Controllers
         public async Task<IActionResult> CreatePost(PostModel model)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-
-            model.Slug = Common.ConvertToSlug(model.Name);
-            model.UpdatedDate = DateTime.Now;
-            model.Updated = false;
-            model.UserId = user.Id;
-
-            _ctx.Posts.Add(model);
-            _ctx.SaveChanges();
+            PostDAL.CreatePost(model, user);
 
             return new OkResult();
         }
@@ -72,9 +54,7 @@ namespace JwtApi.netcore.Controllers
         [HttpPut("edit")]
         public IActionResult EditPost(PostModel model)
         {
-            _ctx.Entry(model).State = EntityState.Modified;
-            _ctx.SaveChanges();
-
+            PostDAL.EditPost(model);
             return new OkResult();
         }
 
@@ -82,9 +62,7 @@ namespace JwtApi.netcore.Controllers
         [HttpDelete("discard")]
         public IActionResult RemovePost(PostModel model)
         {
-            _ctx.Entry(model).State = EntityState.Deleted;
-            _ctx.SaveChanges();
-
+            PostDAL.RemovePost(model);
             return new OkResult();
         }
 
@@ -92,12 +70,7 @@ namespace JwtApi.netcore.Controllers
         public async Task<IActionResult> AddComment(CommentModel model)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-
-            model.UserId = user.Id;
-            model.Created = DateTime.Now;
-
-            _ctx.Add(model);
-            _ctx.SaveChanges();
+            PostDAL.AddComment(model, user);
 
             return new OkResult();
         }
@@ -106,9 +79,7 @@ namespace JwtApi.netcore.Controllers
         [HttpDelete("removeComment")]
         public IActionResult RemoveComment(CommentModel model)
         {
-            _ctx.Entry(model).State = EntityState.Deleted;
-            _ctx.SaveChanges();
-
+            PostDAL.RemoveComment(model);
             return new OkResult();
         }
 
@@ -116,14 +87,7 @@ namespace JwtApi.netcore.Controllers
         [HttpDelete("markRemove")]
         public IActionResult RemoveComment(int id)
         {
-            var model = new RemovalModel
-            {
-                PostId = id
-            };
-
-            _ctx.PostRemovals.Add(model);
-            _ctx.SaveChanges();
-
+            PostDAL.MarkPostForRemoval(id);
             return new OkResult();
         }
     }
