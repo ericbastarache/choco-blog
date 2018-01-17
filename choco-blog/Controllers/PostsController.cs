@@ -34,6 +34,13 @@ namespace JwtApi.netcore.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("all")]
+        public JsonResult All(PostListFetch model)
+        {
+            return Json(PostDAL.GetAllPaginatedPosts(model));
+        }
+
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public JsonResult GetPost(string id)
         {

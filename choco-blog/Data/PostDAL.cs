@@ -14,8 +14,8 @@ namespace JwtApi.netcore.Data
     {
         public static IList<PostViewModel> GetAllPosts()
         {
-            using (var ctx = new AppDbContext())
-            {
+            using (var ctx = new AppDbContext()) {
+            
                 var posts = ctx.Posts.Where(x => x.Published)
                     .Select(x => new PostViewModel()
                     {
@@ -32,6 +32,42 @@ namespace JwtApi.netcore.Data
 
                 return posts;
             }
+        }
+
+        public static PostListCart GetAllPaginatedPosts(PostListFetch model)
+        {
+            var postCart = new PostListCart();
+            var skip = model.PageNumber - 1;
+            skip *= model.DisplayRecords;
+
+            using (var ctx = new AppDbContext())
+            {
+                var postCount = ctx.Posts.Count(x => x.Published);
+
+                var posts = ctx.Posts.Where(x => x.Published)
+                    .Where(x => x.Published)
+                    .Skip(skip)
+                    .Take(model.DisplayRecords)
+                    .Select(x => new PostViewModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Slug = x.Slug,
+                        Content = x.Content,
+                        UpdatedDate = x.UpdatedDate,
+                        Updated = x.Updated,
+                        Published = x.Published,
+                        UserId = x.UserId,
+                        UserName = ctx.Users.SingleOrDefault(u => u.Id == x.UserId).UserName
+                    }).ToList();
+
+                postCart.TotalPosts = postCount;
+                postCart.TotalPosts = ((postCount + model.DisplayRecords - 1) / model.DisplayRecords);
+                postCart.CurrentPage = model.PageNumber;
+                postCart.Posts = posts;
+            }
+
+            return postCart;
         }
 
         public static object GetPost(string id)

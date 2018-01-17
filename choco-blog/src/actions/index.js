@@ -2,7 +2,7 @@ export const FETCH_POSTS = 'FETCH_POSTS';
 export const FETCH_POST = 'FETCH_POST';
 
 //local api url CHANGE LATER
-export const API_URL = 'http://localhost:5000/api';
+export const API_URL = process.env.NODE_ENV === 'Production' ? `${window.location.protocol}//${window.location.hostname}/api` : 'http://localhost:5000/api';
 
 export const fetchPosts = (state) => {
     return {
