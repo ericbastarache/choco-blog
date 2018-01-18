@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using JwtApi.netcore.Data;
 using JwtApi.netcore.Models;
@@ -36,12 +37,20 @@ namespace JwtApi.netcore.Helpers
                 }
             };
 
-            foreach (var role in roles)
+            using (var ctx = new AppDbContext())
             {
-                var roleExists = await roleManager.RoleExistsAsync(role);
-                if (!roleExists)
+                var allRoles = ctx.Roles.ToList();
+                foreach (var role in roles)
                 {
-                    await roleManager.CreateAsync(new IdentityRole(role));
+                    if (allRoles.Any(x => x.Name.Contains(role))) continue;
+
+                    var model = new RoleModel()
+                    {
+                        Name = role
+                    };
+
+                    ctx.Roles.Add(model);
+                    ctx.SaveChanges();
                 }
             }
 

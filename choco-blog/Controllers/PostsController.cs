@@ -52,6 +52,12 @@ namespace JwtApi.netcore.Controllers
         [HttpPost("create")]
         public IActionResult CreatePost([FromBody] PostRequestModel model)
         {
+            var permissions = Permissions.ForPosts(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (!permissions.Contains(Permissions.PostPermissions.Create))
+            {
+                return Unauthorized();
+            }
+
             var user = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             PostDAL.CreatePost(model, user);
 
@@ -61,6 +67,12 @@ namespace JwtApi.netcore.Controllers
         [HttpPut("edit")]
         public IActionResult EditPost(PostModel model)
         {
+            var permissions = Permissions.ForPosts(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (!permissions.Contains(Permissions.PostPermissions.Update))
+            {
+                return Unauthorized();
+            }
+
             PostDAL.EditPost(model);
             return new OkResult();
         }
@@ -68,6 +80,15 @@ namespace JwtApi.netcore.Controllers
         [HttpDelete("discard")]
         public IActionResult RemovePost(PostModel model)
         {
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isOwnPost = model.UserId == userId;
+            var permissions = Permissions.ForPosts(userId);
+            if (isOwnPost && !permissions.Contains(Permissions.PostPermissions.DeleteOwn) || 
+                !isOwnPost && !permissions.Contains(Permissions.PostPermissions.DeleteOthers))
+            {
+                return Unauthorized();
+            }
+
             PostDAL.RemovePost(model);
             return new OkResult();
         }
@@ -84,6 +105,12 @@ namespace JwtApi.netcore.Controllers
         [HttpDelete("removeComment")]
         public IActionResult RemoveComment(CommentModel model)
         {
+            var permissions = Permissions.ForComments(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (!permissions.Contains(Permissions.CommentPermissions.Delete))
+            {
+                return Unauthorized();
+            }
+
             PostDAL.RemoveComment(model);
             return new OkResult();
         }
@@ -91,6 +118,12 @@ namespace JwtApi.netcore.Controllers
         [HttpDelete("markRemove")]
         public IActionResult RemoveComment(int id)
         {
+            var permissions = Permissions.ForComments(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (!permissions.Contains(Permissions.CommentPermissions.MarkForDelete))
+            {
+                return Unauthorized();
+            }
+
             PostDAL.MarkPostForRemoval(id);
             return new OkResult();
         }

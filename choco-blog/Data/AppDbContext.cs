@@ -14,6 +14,8 @@ namespace JwtApi.netcore.Data
         public DbSet<PostModel> Posts { get; set; }
         public DbSet<CommentModel> Comments { get; set; }
         public DbSet<RemovalModel> PostRemovals { get; set; }
+        public new DbSet<RoleModel> Roles { get; set; }
+        public new DbSet<UserRolesModel> UserRoles { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

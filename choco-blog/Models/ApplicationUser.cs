@@ -16,5 +16,7 @@ namespace JwtApi.netcore.Models
         public List<PostModel> Posts { get; set; }
         [InverseProperty("User")]
         public List<CommentModel> Comments { get; set; }
+        [InverseProperty("User")]
+        public List<UserRolesModel> UserRoles { get; set; }
     }
 }

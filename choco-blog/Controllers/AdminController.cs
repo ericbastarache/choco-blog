@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using JwtApi.netcore.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -14,11 +16,15 @@ namespace choco_blog.Controllers
     [Route("api/[controller]")]
     public class AdminController : Controller
     {
-        // api call to make sure we have access to the dashboard before we load
-        [Authorize(Roles = "Admin")]
         [HttpGet("")]
         public IActionResult AdminAuth()
         {
+            var permissions = Permissions.ForAdmin(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (!permissions.Contains(Permissions.AdminPermissions.Access))
+            {
+                return Unauthorized();
+            }
+
             return new OkResult();
         }
     }
