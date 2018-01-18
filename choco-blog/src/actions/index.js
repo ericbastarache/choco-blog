@@ -4,10 +4,17 @@ export const FETCH_POST = 'FETCH_POST';
 //local api url CHANGE LATER
 export const API_URL = process.env.NODE_ENV === 'Production' ? `${window.location.protocol}//${window.location.hostname}/api` : 'http://localhost:5000/api';
 
-export const fetchPosts = (state) => {
+export const fetchPosts = () => {
+
+    const res = fetch(`${API_URL}/posts/all`, {
+        method: 'GET'})
+            .then((data) => {
+                return data.json()
+            }).then(json => json);
+
     return {
         type: FETCH_POSTS,
-        payload: state
+        payload: res
     }
 }
 
