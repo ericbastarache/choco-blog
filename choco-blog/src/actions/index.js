@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const FETCH_POSTS = 'FETCH_POSTS';
 export const FETCH_POST = 'FETCH_POST';
 
@@ -5,12 +7,8 @@ export const FETCH_POST = 'FETCH_POST';
 export const API_URL = process.env.NODE_ENV === 'Production' ? `${window.location.protocol}//${window.location.hostname}/api` : 'http://localhost:5000/api';
 
 export const fetchPosts = () => {
-
-    const res = fetch(`${API_URL}/posts/all`, {
-        method: 'GET'})
-            .then((data) => {
-                return data.json()
-            }).then(json => json);
+    const res = axios.get(`${API_URL}/posts/all`);
+    console.log('res', res);
 
     return {
         type: FETCH_POSTS,

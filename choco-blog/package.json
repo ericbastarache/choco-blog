@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@aspnet/signalr-client": "^1.0.0-alpha2-final",
+    "axios": "^0.17.1",
     "concurrently": "^3.5.1",
     "history": "^4.7.2",
     "material-design-icons": "^3.0.1",
@@ -16,7 +17,8 @@
     "react-router-redux": "^5.0.0-alpha.9",
     "redux": "^3.7.2",
     "redux-form": "^7.2.0",
-    "redux-saga": "^0.16.0"
+    "redux-promise": "^0.5.3",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "react-scripts": "1.1.0"

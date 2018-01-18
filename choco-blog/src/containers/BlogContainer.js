@@ -1,27 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
 import { fetchPosts } from '../actions';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 
 class BlogContainer extends React.Component {
-    state = {
-        posts: []
-    };
 
     componentDidMount() {
-        console.log('componentMount', this.props);
-        this.props.dispatch(fetchPosts());
+       this.props.dispatch(fetchPosts());
     }
     
     render() {
         console.log('props', this.props);
-        if (!this.state.posts) {
-            return null;
-        }
         return (
             <div>
                 <h1>Blog Container</h1>
-                {this.props.posts.posts.map((post) => {
+                {this.props.posts.map((post) => {
                     return (
                         <div key={post.id}>
                             <Card>
@@ -39,8 +32,9 @@ class BlogContainer extends React.Component {
 }
 
 const mapStateToProps = state => {
+    console.log('state', state);
     return {
-        posts: state.posts
+        posts: state.posts.posts
     }
 }
 
