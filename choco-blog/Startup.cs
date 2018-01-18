@@ -77,12 +77,6 @@ namespace JwtApi.netcore
                     .AllowCredentials());
             });
 
-            services.AddAuthorization(o =>
-            {
-                o.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-                o.AddPolicy("RequireBloggerRole", policy => policy.RequireRole("Blogger"));
-            });
-
             services.AddSignalR();
             services.AddMvc();
         }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JwtApi.netcore.Helpers;
 using JwtApi.netcore.Models;
+using JwtApi.netcore.Models.RequesModels;
 using JwtApi.netcore.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -128,16 +129,20 @@ namespace JwtApi.netcore.Data
             }
         }
 
-        public static void CreatePost(PostModel model, ApplicationUser user)
+        public static void CreatePost(PostRequestModel model, string userId)
         {
-            model.Slug = Common.ConvertToSlug(model.Name);
-            model.UpdatedDate = DateTime.Now;
-            model.Updated = false;
-            model.UserId = user.Id;
+            var post = new PostModel
+            {
+                Name = model.Name,
+                Content = model.Content,
+                Slug = Common.ConvertToSlug(model.Name),
+                Published = model.Published,
+                UserId = userId,
+            };
 
             using (var ctx = new AppDbContext())
             {
-                ctx.Posts.Add(model);
+                ctx.Posts.Add(post);
                 ctx.SaveChanges();
             }
         }
@@ -160,14 +165,18 @@ namespace JwtApi.netcore.Data
             }
         }
 
-        public static void AddComment(CommentModel model, ApplicationUser user)
+        public static void AddComment(CommentRequestModel model, string userId)
         {
-            model.UserId = user.Id;
-            model.Created = DateTime.Now;
+            var comment = new CommentModel
+            {
+                Content = model.Content,
+                UserId = userId,
+                PostId = model.PostId
+            };
 
             using (var ctx = new AppDbContext())
             {
-                ctx.Add(model);
+                ctx.Add(comment);
                 ctx.SaveChanges();
             }
         }

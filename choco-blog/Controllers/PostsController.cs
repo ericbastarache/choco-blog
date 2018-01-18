@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using JwtApi.netcore.Data;
 using JwtApi.netcore.Helpers;
 using JwtApi.netcore.Models;
+using JwtApi.netcore.Models.RequesModels;
 using JwtApi.netcore.Models.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +36,7 @@ namespace JwtApi.netcore.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("all")]
+        [HttpGet("all2")]
         public JsonResult All(PostListFetch model)
         {
             return Json(PostDAL.GetAllPaginatedPosts(model));
@@ -47,17 +49,15 @@ namespace JwtApi.netcore.Controllers
             return Json(PostDAL.GetPost(id));
         }
 
-        [Authorize(Roles = "Blogger")]
         [HttpPost("create")]
-        public async Task<IActionResult> CreatePost(PostModel model)
+        public IActionResult CreatePost([FromBody] PostRequestModel model)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var user = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             PostDAL.CreatePost(model, user);
 
             return new OkResult();
         }
 
-        [Authorize(Roles = "Blogger")]
         [HttpPut("edit")]
         public IActionResult EditPost(PostModel model)
         {
@@ -65,7 +65,6 @@ namespace JwtApi.netcore.Controllers
             return new OkResult();
         }
 
-        [Authorize(Roles = "Admin, Blogger")]
         [HttpDelete("discard")]
         public IActionResult RemovePost(PostModel model)
         {
@@ -73,16 +72,15 @@ namespace JwtApi.netcore.Controllers
             return new OkResult();
         }
 
-        [HttpGet("addComment")]
-        public async Task<IActionResult> AddComment(CommentModel model)
+        [HttpPost("addComment")]
+        public IActionResult AddComment([FromBody] CommentRequestModel model)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var user = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             PostDAL.AddComment(model, user);
 
             return new OkResult();
         }
 
-        [Authorize(Roles = "Admin, Blogger, Moderator")]
         [HttpDelete("removeComment")]
         public IActionResult RemoveComment(CommentModel model)
         {
@@ -90,7 +88,6 @@ namespace JwtApi.netcore.Controllers
             return new OkResult();
         }
 
-        [Authorize(Roles = "Moderator")]
         [HttpDelete("markRemove")]
         public IActionResult RemoveComment(int id)
         {
