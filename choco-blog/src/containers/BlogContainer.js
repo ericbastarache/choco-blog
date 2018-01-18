@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
+import { fetchPosts } from '../actions';
 
 class BlogContainer extends React.Component {
     state = {
@@ -8,26 +9,19 @@ class BlogContainer extends React.Component {
     };
 
     componentDidMount() {
-        this.props.dispatch({type: 'FETCH_POSTS'});
-        // const API_URL = process.env.NODE_ENV === 'Production' ? `${window.location.protocol}//${window.location.hostname}/api` : 'http://localhost:5000/api';
-
-        // fetch(`${API_URL}/posts/all`, {
-        //     method: 'GET'})
-        //         .then((data) => {
-        //             return data.json()
-        //         }).then((json) => {
-        //             this.setState({ posts: json })
-        //         })
+        console.log('componentMount', this.props);
+        this.props.dispatch(fetchPosts());
     }
     
     render() {
+        console.log('props', this.props);
         if (!this.state.posts) {
             return null;
         }
         return (
             <div>
                 <h1>Blog Container</h1>
-                {this.state.posts.map((post) => {
+                {this.props.posts.posts.map((post) => {
                     return (
                         <div key={post.id}>
                             <Card>
