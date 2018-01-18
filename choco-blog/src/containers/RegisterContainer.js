@@ -1,11 +1,25 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import Registration from '../components/Registration/Registration';
 
 class RegisterContainer extends React.Component {
     render() {
         return (
-            <div>Register</div>
-        )
+            <Registration {...this.props} />
+        );
+    }
+
+    handleSubmit = e => {
+        
     }
 };
 
-export default RegisterContainer;
+const mapStateToProps = state => {
+    return {
+        username: state.username,
+        password: state.password,
+        email: state.email
+    }
+}
+
+export default connect(mapStateToProps)(RegisterContainer);
