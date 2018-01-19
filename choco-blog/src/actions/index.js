@@ -17,13 +17,11 @@ export const fetchPosts = () => {
 }
 
 export const fetchPost = (id) => {
+    const res = axios.get(`${API_URL}/posts/${id}`);
+    console.log('res', res);
 
-    // const request = fetch(`${API_URL}/posts/${id}`, {
-    //     method: 'GET'
-    // }).then(data => data);
-
-    // return {
-    //     type: FETCH_POST,
-    //     payload: data
-    // }
+    return {
+        type: FETCH_POST,
+        payload: res
+    }
 }

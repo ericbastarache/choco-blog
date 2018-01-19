@@ -6,6 +6,7 @@ import Home from '../components/Home/Home';
 import Login from './LoginContainer';
 import Blog from './BlogContainer';
 import Register from './RegisterContainer';
+import Post from './PostContainer';
 
 class Main extends React.Component {
     render() {
@@ -13,7 +14,8 @@ class Main extends React.Component {
             <div>
                 <Switch>
                     <Route exact path="/" component={Home} />
-                    <Route path="/blog" component={Blog} />
+                    <Route exact path="/blog" component={Blog} />
+                    <Route exact path="/blog/:id" component={Post} />
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
                 </Switch>
